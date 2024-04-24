@@ -69,6 +69,27 @@ void checkFiles() {
         if (!file.is_open()) {
             continue;
         }
+        //whitelist check
+        std::ifstream whitelist("whitelist.wwwqr");
+
+        if (whitelist.is_open()) {
+            std::string tmpWLine;
+            bool isWhite = false;
+            while (std::getline(whitelist, tmpWLine)) {
+                if (str == tmpWLine) {
+                    isWhite = true;
+                    break;
+                }
+            }
+            if (isWhite) {
+                continue;
+            }
+            whitelist.close();
+        }
+        else {
+            std::cout << "\n\nWhitelist.wwwqr file not found.\n\n";
+        }
+        //
         int lineCount = 0;
         while (std::getline(file, line)) {
             ++lineCount;
