@@ -7,11 +7,19 @@
 std::vector<std::string> fileList;
 std::vector<std::string> phpFilter;
 std::vector<std::string> warningList;
+int returnCode = 0;
 
 void createPhpFilter() {
-    phpFilter.emplace_back("eval");
-    phpFilter.emplace_back("exec");
-    phpFilter.emplace_back("shell_exec");
+    std::ifstream conf("phpFilter.wwwqr");
+    if (!conf.is_open()) {
+        std::cout << "\n\nCould not open phpFilter.wwwqr.\n\n";
+        return;
+    }
+    std::string line;
+    while(std::getline(conf, line)) {
+        phpFilter.emplace_back(line);
+    }
+    conf.close();
 }
 
 void createFilters() {
@@ -69,6 +77,9 @@ void checkFiles() {
                     int tmpP = line.find(val);
                     if (tmpP != std::string::npos) {
                         warningList.emplace_back("Error at line " + std::to_string(lineCount) + " in '" + str + "' Filter: (" + val + ")\n");
+                        if (returnCode == 0) {
+                            returnCode = 1;
+                        }
                     }
                 }
             }
@@ -84,5 +95,5 @@ int main() {
     for (auto& str : warningList) {
         std::cout << str;
     }
-    return 0;
+    return returnCode;
 }
