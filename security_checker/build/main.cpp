@@ -81,10 +81,10 @@ void checkFiles() {
                     break;
                 }
             }
+            whitelist.close();
             if (isWhite) {
                 continue;
             }
-            whitelist.close();
         }
         else {
             std::cout << "\n\nWhitelist.wwwqr file not found.\n\n";
